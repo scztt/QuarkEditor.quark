@@ -9,7 +9,8 @@
           test: "",
            url: "http://github.com/scztt/QuarkEditor.quark",
   dependencies: [
-
+              		"Connection",
+              		"UnitTesting"
                 ],
   isCompatible: true ,
          since: ""
