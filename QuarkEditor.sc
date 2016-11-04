@@ -605,7 +605,7 @@ QuarkEditorView {
 		};
 
 		gitPushButton.action = {
-
+			this.pushGit();
 		};
 
 		actions = [
