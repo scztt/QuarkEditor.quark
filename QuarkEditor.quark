@@ -10,7 +10,8 @@
            url: "http://github.com/scztt/QuarkEditor.quark",
   dependencies: [
               		"Connection",
-              		"UnitTesting"
+              		"UnitTesting",
+              		"WindowViewRecall"
                 ],
   isCompatible: true ,
          since: ""
