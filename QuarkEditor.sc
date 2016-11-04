@@ -822,7 +822,7 @@ QuarkEditorView {
 
 			gitUpdater = SkipJack({ this.updateGit() }, 5);
 		};
-		connections.trace;
+		connections;
 	}
 
 	disconnect {
