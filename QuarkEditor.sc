@@ -1216,7 +1216,9 @@ QuarkEditor {
 			var helpPath = helpFolder +/+ (class.name ++ ".schelp");
 			var doc = SCDocEntry.newUndocClass(class.name);
 			if (File.exists(helpPath).not) {
-				SCDoc.makeClassTemplate(doc).write(helpPath, false);
+				File.use(helpPath,"w", { arg f;
+					f.write(SCDoc.makeClassTemplate(doc))
+				})
 			} {
 				"Class '%' is undocumented, but appears to have a help file.".warn;
 			}
