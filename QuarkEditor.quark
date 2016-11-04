@@ -11,7 +11,8 @@
   dependencies: [
               		"Connection",
               		"UnitTesting",
-              		"WindowViewRecall"
+              		"WindowViewRecall",
+              		"Log"
                 ],
   isCompatible: true ,
          since: ""
