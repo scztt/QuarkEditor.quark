@@ -1283,6 +1283,147 @@ QuarkEditor {
 		}
 	}
 
+	*findRepoRoot {
+		|path|
+		while { path != PathName(path).parentPath() } {
+			if (File.exists(path +/+ ".git")) {
+				^path
+			};
+			path = PathName(path).parentPath();
+		};
+		^nil
+	}
+
+	log {
+		|limit ...args|
+		var format, cmd, log, formatCodes;
+		formatCodes = [
+			["%H", 	\commit_hash],
+			["%T", 	\tree_hash],
+			["%an",	\author_name],
+			["%ae",	\author_email],
+			["%ad",	\date],
+			["%s",	\subject],
+			["%b",	\body],
+		].flop;
+
+		format = formatCodes[0].join("%x1f") ++ "%x1e";
+		cmd = ["log", "--format='%'".format(format)];
+		if (limit.notNil) {
+			cmd = cmd ++ ["-%".format(limit.asInteger.asString)];
+		};
+		if (args.notNil) {
+			cmd = cmd ++ args;
+		};
+
+		log = this.git(cmd);
+		^log.split(30.asAscii).collect({
+			|item|
+			item = item.stripWhiteSpace();
+			if (item.isEmpty.not) {
+				item = item.split(31.asAscii);
+				formatCodes[1].collectAs({
+					|key, i|
+					key -> item[i]
+				}, IdentityDictionary);
+			} {
+				nil;
+			}
+		}).select(_.notNil);
+	}
+
+	status {
+		var status, statusMap;
+		statusMap = Dictionary [
+			"??" -> \untracked,
+			"" -> \unmodified,
+			"M" -> \modified,
+			"A" -> \added,
+			"D" -> \delete,
+			"R" -> \renamed,
+			"C" -> \copied,
+			"U" -> \unmerged,
+		];
+
+		status = this.git(["status", "--porcelain"]);
+		^status.split($\n).collect({
+			|line|
+			var match = line.findRegexp("(..) (.*)");
+			if (match.notEmpty) {
+				(
+					\status: statusMap[match[1][1].stripWhiteSpace],
+					\file: localPath +/+ match[2][1].stripWhiteSpace
+				)
+			} {
+				nil
+			};
+		}).select(_.notNil)
+	}
+
+	commit {
+		|subject, body, filesToAdd|
+		var cmd, msgString, msgPath;
+		if (subject.stripWhiteSpace.isEmpty) {
+			Error("A commit message is required.").throw
+		};
+
+		msgString = subject ++ "\n\n" ++ "body";
+		msgPath = PathName.tmp +/+ "sc_git_commit_msg" ++ msgString.hash;
+		msgString.write(msgPath, true);
+
+		cmd = ["commit", "--file='%'".format(msgPath)];
+		if (filesToAdd.isArray) {
+			cmd = cmd ++ filesToAdd;
+		};
+		this.git(cmd);
+	}
+
+	ignore {
+		|line|
+		var ignoreString = "", ignores;
+		var existingIndex;
+		var ignoreFile = localPath +/+ ".gitignore";
+
+		if (File.exists(ignoreFile)) {
+			ignoreString = String.readNew(File(ignoreFile, "r"));
+		};
+
+		ignores = ignoreString.split($\n);
+		if (ignores.detect({
+			|i|
+			i.stripWhiteSpace == line.stripWhiteSpace
+		}).isNil) {
+			ignores = ignores.add(line);
+		};
+		ignoreString = ignores.join("\n");
+		ignoreString.write(ignoreFile, true);
+	}
+
+	unignore {
+		|line|
+		var ignoreFile = localPath +/+ ".gitignore";
+		var ignoreString;
+
+		if (File.exists(ignoreFile)) {
+			ignoreString = String.readNew(File(ignoreFile, "r"));
+			ignoreString = ignoreString.split($\n).reject({
+				|existingLine|
+				(existingLine.stripWhiteSpace == line.stripWhiteSpace)
+			}).join("\n");
+			ignoreString.write(ignoreFile, true);
+		}
+	}
+
+	add {
+		|filePattern="*"|
+		var result = this.git(["add", filePattern]);
+	}
+
+	reset {
+		|filePattern="*"|
+		var result = this.git(["reset", filePattern]);
+	}
+
 	addTag {
 		|tagName, force=false|
 		var cmd = "tag";
