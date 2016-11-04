@@ -668,10 +668,12 @@ QuarkEditorView {
 
 	makeField {
 		|name, desc|
-		var view, label, field;
+		var view, label, field, labelString;
 
+		labelString = (desc[\label] ?? name).asString.copy;
+		labelString[0] = labelString[0].toUpper;
 		label = (StaticText()
-			.string_((desc[\label] ?? name).asString.capitalize)
+			.string_(labelString)
 			.align_(\right)
 			.font_(Font(size:14, bold:true))
 		);
