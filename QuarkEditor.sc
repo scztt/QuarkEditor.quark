@@ -1128,7 +1128,9 @@ QuarkEditor {
 
 	save {
 		var str = this.class.serialize(quarkData);
-		str.write(quarkFile, true);
+		File.use(quarkFile, "w", {
+			|f| f.write(str)
+		});
 		modCount = 0;
 		this.changed(\saved);
 	}
