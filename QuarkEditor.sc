@@ -1376,7 +1376,7 @@ QuarkEditor {
 
 		cmd = ["commit", "--file='%'".format(msgPath)];
 		if (filesToAdd.isArray) {
-			cmd = cmd ++ filesToAdd;
+			cmd = cmd ++ filesToAdd.collect("'%'".format(_));
 		};
 		this.git(cmd);
 	}
