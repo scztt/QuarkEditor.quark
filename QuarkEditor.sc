@@ -1285,7 +1285,7 @@ QuarkEditor {
 
 	*findRepoRoot {
 		|path|
-		while { path != PathName(path).parentPath() } {
+		while { path.notNil and: { path != PathName(path).parentPath() } } {
 			if (File.exists(path +/+ ".git")) {
 				^path
 			};
