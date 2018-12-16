@@ -1350,6 +1350,9 @@ QuarkEditor {
 			|line|
 			var match = line.findRegexp("(..) (.*)");
 			if (match.notEmpty) {
+				if (match[2][1].beginsWith("\"")) {
+					match[2][1] = match[2][1][1..match[2][1].size - 2]
+				};
 				(
 					\status: statusMap[match[1][1].stripWhiteSpace],
 					\file: localPath +/+ match[2][1].stripWhiteSpace
