@@ -1461,4 +1461,10 @@ QuarkEditor {
 
 		^result
 	}
+	add {
+		|file|
+		var cmd = ["add"];
+		cmd = cmd ++ ["'" ++ format(file) ++ "'"];
+		this.git(cmd);
+	}
 }
