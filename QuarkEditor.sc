@@ -574,7 +574,7 @@ QuarkEditorView {
 					class.postln.openCodeFile();
 				}
 				{
-					clicked[1].openTextFile()
+					clicked[1].openDocument()
 				};
 			}
 		});
@@ -584,7 +584,7 @@ QuarkEditorView {
 		docsView.mouseDownAction_({
 			|v, x, y, a, b, clicks|
 			if (clicks > 1) {
-				v.currentItem.strings[1].openTextFile();
+				v.currentItem.strings[1].openDocument();
 			}
 		});
 
