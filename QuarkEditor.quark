@@ -4,13 +4,12 @@
         author: "Scott Carver",
      copyright: "2016",
        license: "MIT",
-       version: "0.0.2",
+       version: "0.0.4",
         schelp: "",
           test: "",
            url: "http://github.com/scztt/QuarkEditor.quark",
   dependencies: [
               		"Connection",
-              		"UnitTesting",
               		"WindowViewRecall",
               		"Log"
                 ],
