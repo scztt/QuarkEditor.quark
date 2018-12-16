@@ -1431,6 +1431,7 @@ QuarkEditor {
 		|tagName, force=false|
 		var cmd = "tag";
 		if (force) { cmd = cmd + "-f" };
+		tagName = tagName.replace(" ", "_");
 		cmd = cmd + tagName.asString;
 
 		this.git([cmd])
