@@ -801,7 +801,7 @@ QuarkEditorView {
 
 	connect {
 		this.disconnect();
-		connections = ConnectionList.makeWith {
+		connections = ConnectionList.make {
 			fields.keysValuesDo {
 				|fieldName, field|
 				editor.signal(fieldName).connectTo(field.valueSlot);
